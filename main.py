@@ -1,7 +1,8 @@
 from llama_cpp import Llama
+import os
 
 llm = Llama(
-    model_path=".checkpoints\gemma-3-4b-it-q4_0.gguf",
+    model_path=os.path.join(os.path.dirname(__file__), ".checkpoints","gemma-3-4b-it-q4_0.gguf"),
     n_threads=1, # CPU cores
     n_batch=2, # Should be between 1 and n_ctx, consider the amount of VRAM in your GPU.
     # n_gpu_layers=30, # The max for this model is 30 in a T4, If you use llama 2 70B, you'll need to put fewer layers on the GPU
