@@ -1,12 +1,12 @@
 from llama_cpp import Llama
 import os
+import base64
 
 llm = Llama(
     model_path=os.path.join(os.path.dirname(__file__), ".checkpoints","gemma-3-4b-it-q4_0.gguf"),
-    n_threads=1, # CPU cores
-    n_batch=2, # Should be between 1 and n_ctx, consider the amount of VRAM in your GPU.
-    # n_gpu_layers=30, # The max for this model is 30 in a T4, If you use llama 2 70B, you'll need to put fewer layers on the GPU
-    n_ctx=131072, # Context window,
+    n_threads=1,
+    n_batch=2,
+    n_ctx=4096, # Context window,
 )
 
 prompt = "Example of linear regression in python"
@@ -18,22 +18,36 @@ prompt_template=f'''Below is an instruction that describes a task. Write a respo
 ### Response:'''
 
 
-stream = llm(
-    prompt_template,
-    max_tokens=16, # Number of new tokens to be generated, increase it for a longer response
-    temperature=0.8,
-    top_p=0.95,
-    repeat_penalty=1.2,
-    top_k=50,
-    echo=False,
-    stream=True,
-    stop=["Instruction:", "Response:"] # Stop generation when such token appears
-)
+def image_to_base64_data_uri(file_path: str):
+    with open(file_path, "rb") as img_file:
+        base64_data = base64.b64encode(img_file.read()).decode('utf-8')
+        return f"data:image/png;base64,{base64_data}"
 
-response = ''
-for output in stream:
-    text_output = output['choices'][0]['text'].replace('\r', '')
-    print("\033[34m" + text_output + "\033[0m", end ='')
-    response += text_output
+
+response = llm.create_chat_completion(
+    messages = [
+        {"role": "system", "content": "You are an assistant who perfectly describes images."},
+        {
+            "role": "user",
+            "content": [
+                {"type" : "text", "text": "What's in this image?"},
+                {"type": "image_url",
+                 "image_url": {
+                    "url": image_to_base64_data_uri("testimg.jpg") 
+                    }
+                }
+            ]
+        }
+    ],
+    response_format={
+        "type": "json_object",
+        "schema": {
+            "type": "object",
+            "properties": {"team_name": {"type": "string"}},
+            "required": ["team_name"],
+        },
+    },
+    temperature=0.7,
+)
 
 print(response)
