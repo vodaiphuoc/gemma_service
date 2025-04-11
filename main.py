@@ -17,7 +17,7 @@ def get_checkpoint():
 
     model_path = huggingface_hub.snapshot_download(
         repo_id="google/gemma-3-4b-it-qat-q4_0-gguf",
-        local_dir= '.checkpoints'
+        local_dir= os.path.join(os.path.dirname(__file__), ".checkpoints")
     )
 
     print(model_path)
@@ -26,8 +26,7 @@ if __name__ == "__main__":
     get_checkpoint()
 
     chat_handler = Gemma3ChatHandler(
-        clip_model_path=os.path.join(os.path.dirname(__file__), ".checkpoints","mmproj-model-f16-4B.gguf"),
-        clip_model_path="/content/.checkpoints/mmproj-model-f16-4B.gguf"
+        clip_model_path=os.path.join(os.path.dirname(__file__), ".checkpoints","mmproj-model-f16-4B.gguf")
     )
 
     llm = Llama(
