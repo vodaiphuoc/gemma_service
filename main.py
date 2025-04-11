@@ -34,7 +34,8 @@ if __name__ == "__main__":
         n_threads=1,
         n_batch=2,
         n_ctx=2048,
-        # verbose= False,
+        verbose= False,
+        chat_handler = chat_handler
         # chat_format="gemma",
     )
 
