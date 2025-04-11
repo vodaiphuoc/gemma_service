@@ -10,5 +10,7 @@ for page in doc:  # iterate through the pages
     pix = page.get_pixmap()  # render page to an image
     img = pix.pil_image()
 
-    img = ImageOps.pad(img, (448, 448), color=(0, 0, 0))
+    img = img.resize((336, 336))
+
+    # img = ImageOps.pad(img, (336, 336), color=(0, 0, 0))
     img.save(f"page-{page.number}.png", format = "PNG")
