@@ -52,11 +52,11 @@ if __name__ == "__main__":
             {
                 "role": "user",
                 "content": [
+                    {"type" : "text", "text": prompt},
                     {
                         "type": "image_url",
                         "image_url": {"url": image_to_base64_data_uri("page-2.png")}
-                    },
-                    {"type" : "text", "text": prompt}
+                    }
                 ]
             }
         ],
