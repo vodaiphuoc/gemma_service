@@ -11,6 +11,7 @@ import base64
 prompt = "What are objects in the image?"
 
 def get_checkpoint():
+    os.environ['HF_HUB_DISABLE_PROGRESS_BARS'] = "true"
     load_dotenv()
 
     huggingface_hub.login(os.environ['HUGGINGFACE'])
@@ -54,7 +55,7 @@ if __name__ == "__main__":
                     {
                         "type": "image_url",
                         "image_url": {
-                            "url": image_to_base64_data_uri("testimg.jpg")
+                            "url": image_to_base64_data_uri("testimg.jpg").read_bytes()
                         }
                     },
                     {"type" : "text", "text": prompt}
