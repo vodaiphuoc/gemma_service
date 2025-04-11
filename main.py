@@ -55,7 +55,7 @@ if __name__ == "__main__":
                     {
                         "type": "image_url",
                         "image_url": {
-                            "url": image_to_base64_data_uri("testimg.jpg").read_bytes()
+                            "url": image_to_base64_data_uri("page-2.png")
                         }
                     },
                     {"type" : "text", "text": prompt}

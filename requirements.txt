@@ -1,2 +1,4 @@
 huggingface-hub
 python-dotenv
+pillow
+pymupdf==1.25.5
