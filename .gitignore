@@ -3,3 +3,4 @@ myenv/
 .checkpoints/.cache/
 *.gguf
 *.pdf
+*test*.py

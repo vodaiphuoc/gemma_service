@@ -33,8 +33,8 @@ if __name__ == "__main__":
     llm = Llama(
         model_path=os.path.join(os.path.dirname(__file__), ".checkpoints","gemma-3-4b-it-q4_0.gguf"),
         n_threads=1,
-        n_batch=2,
-        n_ctx=2048,
+        # n_batch=2,
+        n_ctx = 2048+1024,
         verbose= False,
         chat_handler = chat_handler
         # chat_format="gemma",
@@ -54,12 +54,9 @@ if __name__ == "__main__":
                 "content": [
                     {
                         "type": "image_url",
-                        "image_url": {
-                            "url": image_to_base64_data_uri("page-2.png")
-                        }
+                        "image_url": {"url": image_to_base64_data_uri("page-2.png")}
                     },
                     {"type" : "text", "text": prompt}
-                    
                 ]
             }
         ],
