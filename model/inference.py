@@ -24,6 +24,8 @@ class Model_Handler(object):
                  checkpoint_path:str = os.path.dirname(__file__).replace("model",".checkpoints"), 
                  max_length: int = 7680
         )->None:
+        get_checkpoint()
+
         self.max_length = max_length
         config = og.Config(checkpoint_path)
         config.clear_providers()
