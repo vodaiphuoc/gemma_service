@@ -15,17 +15,17 @@ def get_checkpoint():
     model_path = huggingface_hub.snapshot_download(
         repo_id = os.environ['REPO_ID'],
         allow_patterns= [f"{os.environ['PATTERN']}/*"],
-        local_dir= os.path.dirname(__file__).replace("model",".checkpoints")
+        local_dir= os.path.dirname(__file__).replace("model","checkpoints")
     )
     print(model_path)
 
 class Model_Handler(object):
     def __init__(self, 
-                 checkpoint_path:str = os.path.dirname(__file__).replace("model",".checkpoints"), 
+                 checkpoint_path:str = os.path.dirname(__file__).replace("model","checkpoints"), 
                  max_length: int = 7680
         )->None:
         get_checkpoint()
-
+        print(checkpoint_path)
         self.max_length = max_length
         config = og.Config(checkpoint_path)
         config.clear_providers()
