@@ -21,7 +21,7 @@ def get_checkpoint():
 
 class Model_Handler(object):
     def __init__(self, 
-                 checkpoint_path:str = os.path.dirname(__file__).replace("model","checkpoints"), 
+                 checkpoint_path:str = os.path.dirname(__file__).replace("model","checkpoints",os.environ['PATTERN']), 
                  max_length: int = 7680
         )->None:
         get_checkpoint()
