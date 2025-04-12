@@ -4,3 +4,4 @@ myenv/
 *.gguf
 *.pdf
 *test*.py
+__pycache__/

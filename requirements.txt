@@ -1,3 +1,12 @@
+numpy 
+transformers 
+torch 
+onnx 
+onnxruntime 
+onnxscript 
+onnxruntime-genai 
+backoff 
+peft
 huggingface-hub
 python-dotenv
 pillow
