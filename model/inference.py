@@ -20,12 +20,12 @@ def get_checkpoint():
     print(model_path)
 
 class Model_Handler(object):
-    def __init__(self, 
-                 checkpoint_path:str = os.path.dirname(__file__).replace("model","checkpoints",os.environ['PATTERN']), 
+    def __init__(self,
                  max_length: int = 7680
         )->None:
-        get_checkpoint()
-        print(checkpoint_path)
+        checkpoint_path = get_checkpoint()
+        checkpoint_path = os.path.join(checkpoint_path, os.environ['PATTERN'])
+        
         self.max_length = max_length
         config = og.Config(checkpoint_path)
         config.clear_providers()
