@@ -6,7 +6,7 @@ import os
 
 
 
-def get_checkpoint():
+def get_checkpoint()->str:
     os.environ['HF_HUB_DISABLE_PROGRESS_BARS'] = "true"
     load_dotenv()
 
@@ -17,7 +17,7 @@ def get_checkpoint():
         allow_patterns= [f"{os.environ['PATTERN']}/*"],
         local_dir= os.path.dirname(__file__).replace("model","checkpoints")
     )
-    print(model_path)
+    return model_path
 
 class Model_Handler(object):
     def __init__(self,
