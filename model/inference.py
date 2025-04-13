@@ -28,8 +28,8 @@ class Model_Handler(object):
         
         self.max_length = max_length
         config = og.Config(checkpoint_path)
-        # config.clear_providers()
-        # config.append_provider('cuda')
+        config.clear_providers()
+        config.append_provider('cuda')
 
         self.model = og.Model(config)
         self.processor = self.model.create_multimodal_processor()
