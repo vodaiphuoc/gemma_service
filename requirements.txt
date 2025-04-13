@@ -1,12 +1,4 @@
-numpy 
-transformers 
-torch 
-onnx 
-onnxruntime 
-onnxscript 
 onnxruntime-genai-cuda
-backoff 
-peft
 huggingface-hub
 python-dotenv
 pillow
