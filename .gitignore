@@ -1,6 +1,6 @@
 myenv/
 .env
-.checkpoints/.cache/
+checkpoints/.cache/
 *.gguf
 *.pdf
 *test*.py

@@ -1,0 +1,9 @@
+fastapi
+pillow
+pymupdf==1.25.5
+gemma==3.0.2
+jax[cuda12]
+loguru
+ngrok
+uvicorn
+python-dotenv
