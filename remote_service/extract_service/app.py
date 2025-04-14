@@ -54,10 +54,10 @@ async def lifespan(app: FastAPI):
     app.model = None
 
 
-EXTRACT_ROUTER = APIRouter(prefix= "extract", lifespan= lifespan)
+EXTRACT_ROUTER = APIRouter(prefix= "/extract_service", lifespan= lifespan)
 
 
-@EXTRACT_ROUTER.post("/extract", response_class= JSONResponse)
+@EXTRACT_ROUTER.post("/", response_class= JSONResponse)
 async def extract(files: List[UploadFile], request: Request):
     r"""
     Receive request from local consumer
