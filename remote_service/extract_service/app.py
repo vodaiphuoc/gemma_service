@@ -7,7 +7,7 @@ from typing import List, Dict, Union, Any
 from types import NoneType
 from loguru import logger
 from contextlib import asynccontextmanager
-from components import pdf2imgs, JAXExtractModel
+from .components import pdf2imgs, JAXExtractModel
 
 
 class ModelInference(object):

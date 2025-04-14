@@ -1,3 +1,6 @@
+# This module contains FastAPI app running on remote environment like Colab
+# with public domain from ngrok
+
 import os
 from extract_service import EXTRACT_ROUTER
 
