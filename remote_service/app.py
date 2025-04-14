@@ -1,5 +1,5 @@
 import os
-from .extract_service import EXTRACT_ROUTER
+from extract_service import EXTRACT_ROUTER
 
 from loguru import logger
 import ngrok
