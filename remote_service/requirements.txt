@@ -7,3 +7,4 @@ loguru
 ngrok
 uvicorn
 python-dotenv
+python-multipart
