@@ -9,6 +9,7 @@ from loguru import logger
 from contextlib import asynccontextmanager
 from .components import pdf2imgs, JAXExtractModel
 
+TEMP_DATA_PATH = __file__.replace("app.py",".temp_data")
 
 class ModelInference(object):
     def __init__(self):
@@ -19,7 +20,7 @@ class ModelInference(object):
         api_response_data = []
 
         for _file_req in files:
-            _temp_file_name = f'.temp_data/temp_write_{_file_req.filename}_'+ str(uuid4())+'.pdf'
+            _temp_file_name = f'{TEMP_DATA_PATH}/temp_write_{_file_req.filename}_'+ str(uuid4())+'.pdf'
             content = await _file_req.read()
             with open(_temp_file_name, 'wb') as fp:
                 fp.write(content)
