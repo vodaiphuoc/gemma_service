@@ -3,7 +3,7 @@ from PIL import Image
 from PIL import ImageOps
 from typing import List
 
-TEMP_DATA_PATH = os.path.basename(__file__).replace("components",".temp_data")
+TEMP_DATA_PATH = os.path.dirname(__file__).replace("components",".temp_data")
 
 def pdf2imgs(
         pdf_path: str, 
