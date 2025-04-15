@@ -38,13 +38,13 @@ into markdown text
             max_out_length = max_out_length
         )
 
-    def forward(self,image_paths: List[str])->Dict[str, Union[bool, NoneType, ModelResult]]:
+    def forward(self,img_paths: List[str])->Dict[str, Union[bool, NoneType, ModelResult]]:
         # image pre-processing
         images_list = [np.array(Image.open(_img_path))
-                  for _img_path in image_paths
+                  for _img_path in img_paths
                   ]
 
-        pad_img_tokens = '\n'.join(['<start_of_image>']*len(image_paths))
+        pad_img_tokens = '\n'.join(['<start_of_image>']*len(img_paths))
 
         out = self._sampler.chat(
             f'{self._prompt}: \n{pad_img_tokens}',
