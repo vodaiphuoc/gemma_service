@@ -1,7 +1,9 @@
-import sys, pymupdf  # import the bindings
+import os, pymupdf  # import the bindings
 from PIL import Image
 from PIL import ImageOps
 from typing import List
+
+TEMP_DATA_PATH = os.path.basename(__file__).replace("components",".temp_data")
 
 def pdf2imgs(
         pdf_path: str, 
@@ -17,7 +19,7 @@ def pdf2imgs(
         if resize:
             img = img.resize((336, 336))
 
-        curr_img_path = f".temp_data/page-{page.number}.png"
+        curr_img_path = f"{TEMP_DATA_PATH}/page-{page.number}.png"
         img.save(curr_img_path, format = "JPEG")
         img_out_paths.append(curr_img_path)
 
