@@ -68,6 +68,8 @@ class UnslothExtractModel(_ExtractBase):
             chat_template = "gemma-3"
         )
 
+        print('check type tokenizer: ', type(self.tokenizer))
+
     def _impl_forward(self,input_prompt:str, img_paths: List[str])->str:
         content_parts = [{
                 "type": "image",
@@ -98,7 +100,6 @@ class UnslothExtractModel(_ExtractBase):
             return_tensors = "pt"
         ).to('cuda')
         
-        print('check type tokenizer: ', type(self.tokenizer))
 
         output_tokens =  self.model.generate(
             **inputs,
