@@ -93,7 +93,7 @@ class UnslothExtractModel(_ExtractBase):
         from unsloth import FastLanguageModel
         from unsloth.chat_templates import get_chat_template
 
-        model, self.tokenizer = FastLanguageModel.from_pretrained(
+        model, tokenizer = FastLanguageModel.from_pretrained(
             model_name = "unsloth/gemma-3-4b-pt-unsloth-bnb-4bit",
             max_seq_length = self.max_out_length,
             dtype = None,
@@ -101,10 +101,10 @@ class UnslothExtractModel(_ExtractBase):
         )
         self.model = FastLanguageModel.for_inference(model)
 
-        # self.tokenizer = get_chat_template(
-        #     tokenizer,
-        #     chat_template = "gemma-3"
-        # )
+        self.tokenizer = get_chat_template(
+            tokenizer,
+            chat_template = "gemma-3"
+        )
 
     def _impl_forward(self,input_prompt:str, img_paths: List[str])->str:
         content_parts = [{
@@ -128,16 +128,19 @@ class UnslothExtractModel(_ExtractBase):
             }
         ]
 
+
+        print('self.tokenizer type: ', type(self.tokenizer))
+
         inputs = self.tokenizer.apply_chat_template(
             messages,
             tokenize = True, 
             add_generation_prompt = True, 
             return_tensors = "pt"
         ).to("cuda")
-
+        
         
         output_tokens =  self.model.generate(
-            input_ids = inputs, 
+            **inputs, 
             max_new_tokens = self.max_out_length,
             use_cache = True
         )
