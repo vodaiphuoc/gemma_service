@@ -8,3 +8,4 @@ ngrok
 uvicorn
 python-dotenv
 python-multipart
+unsloth

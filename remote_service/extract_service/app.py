@@ -7,13 +7,13 @@ from typing import List, Dict, Union, Any
 from types import NoneType
 from loguru import logger
 from contextlib import asynccontextmanager
-from .components import pdf2imgs, JAXExtractModel
+from .components import pdf2imgs, JAXExtractModel, UnslothExtractModel
 
 TEMP_DATA_PATH = __file__.replace("app.py",".temp_data")
 
 class ModelInference(object):
     def __init__(self):
-        self.engine = JAXExtractModel()
+        self.engine = UnslothExtractModel()
         self.pdf2imgs = pdf2imgs
     
     async def run(self, files: List[UploadFile])->List[Dict[str, Union[str, bool, NoneType, Dict[str, Any]]]]:    
