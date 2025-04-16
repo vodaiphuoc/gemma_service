@@ -59,7 +59,8 @@ class UnslothExtractModel(_ExtractBase):
 
         self.model, preprocessor = FastLanguageModel.from_pretrained(
             # model_name = "unsloth/gemma-3-4b-pt-unsloth-bnb-4bit",
-            model_name = "unsloth/gemma-3-4b-it",
+            # model_name = "unsloth/gemma-3-4b-it",
+            model_name = "google/gemma-3-4b-it",
             max_seq_length = self.max_out_length,
             dtype = None,
             # load_in_4bit = True,
@@ -112,7 +113,7 @@ class UnslothExtractModel(_ExtractBase):
         )
         print('output_tokens shape: ', output_tokens.shape)
         return self.preprocessor.batch_decode(
-            output_tokens[:, inputs['input_ids'].shape[-1]: ], 
+            output_tokens[:, inputs['input_ids'].shape[-1]: ],
             skip_special_tokens = True
         )[0]
 
