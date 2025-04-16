@@ -17,10 +17,10 @@ def pdf2imgs(
         img = pix.pil_image()
 
         if resize:
-            img = img.resize((336, 336))
-
+            img = img.resize((896,  896))
+        
         curr_img_path = f"{TEMP_DATA_PATH}/page-{page.number}.png"
         img.save(curr_img_path, format = "JPEG")
         img_out_paths.append(curr_img_path)
-
+        
     return img_out_paths
