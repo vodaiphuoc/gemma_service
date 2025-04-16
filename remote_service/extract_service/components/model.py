@@ -21,10 +21,13 @@ class _ExtractBase(ABC):
 # ```"""
     
     _prompt = f"""
-- Please understanding and extract all information of the candidate in Curriculum vitae as list images above
-into Markdown format
-- The information of each field (experiencs, projects, etc...) may be span over many images, so make sure
-relervant information is merged into correct field
+- Please understanding and extract all information of the candidate in Curriculum vitae as list images above.
+- The information of each field (experiencs, projects, etc...) is spread across several images, so make sure
+relervant information is merged into correct field.
+- The output should be formatted as a JSON instance that conforms to the JSON schema below
+```
+{SCHEMA_OUTPUT}
+```
 """
 
     def __init__(self, max_out_length:int):
