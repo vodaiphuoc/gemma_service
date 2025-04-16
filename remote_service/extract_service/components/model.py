@@ -94,12 +94,12 @@ class UnslothExtractModel(_ExtractBase):
             messages,
             add_generation_prompt = True,
             tokenize=True,
-            return_dict=True
+            return_dict=True,
             return_tensors = "pt"
         ).to('cuda')
         
         print('check type tokenizer: ', type(self.tokenizer))
-        
+
         output_tokens =  self.model.generate(
             **inputs,
             max_new_tokens = self.max_out_length-2000,
