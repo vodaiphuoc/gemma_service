@@ -13,10 +13,14 @@ from pydantic import ValidationError
 SCHEMA_OUTPUT = get_schema_output()
 
 class _ExtractBase(ABC):
+#     _prompt = f"""
+# - Please understanding and convert all information of the candidate in Curriculum vitae above
+# - Your output must be structured as JSON with below format
+# {SCHEMA_OUTPUT}\n
+# """
     _prompt = f"""
 - Please understanding and convert all information of the candidate in Curriculum vitae above
-- Your output must be structured as JSON with below format
-{SCHEMA_OUTPUT}\n
+and output as Markdown format
 """
     def __init__(self, max_out_length:int):
         super().__init__()
