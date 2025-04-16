@@ -19,7 +19,6 @@ into markdown text
 - Your output must be structured as below format
 {SCHEMA_OUTPUT}
 - Here are images of the CV:
-{{pad_img_tokens}}
 """
     def __init__(self, max_out_length:int):
         super().__init__()
@@ -36,7 +35,7 @@ into markdown text
         pad_img_tokens = '\n'.join(['<start_of_image>']*len(img_paths))
         
         _out = self._impl_forward(
-            input_prompt = self._prompt.format(pad_img_tokens = pad_img_tokens),
+            input_prompt = self._prompt + pad_img_tokens,
             img_paths = img_paths
         )
         
