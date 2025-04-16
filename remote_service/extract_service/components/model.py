@@ -14,7 +14,7 @@ SCHEMA_OUTPUT = get_schema_output()
 
 class _ExtractBase(ABC):
     _prompt = f"""
-- Please understanding and extract all information of the candidate in Curriculum vitae above
+- Please understanding and extract all information of the candidate in Curriculum vitae as list images above
 - The output should be formatted as a JSON instance that conforms to the JSON schema below
 ```
 {SCHEMA_OUTPUT}
@@ -62,7 +62,7 @@ class UnslothExtractModel(_ExtractBase):
             model_name = "unsloth/gemma-3-4b-it",
             max_seq_length = self.max_out_length,
             dtype = None,
-            load_in_4bit = True,
+            # load_in_4bit = True,
             fast_inference = True
         )
         FastLanguageModel.for_inference(self.model)
@@ -86,7 +86,7 @@ class UnslothExtractModel(_ExtractBase):
         messages = [
             {
                 "role": "system",
-                "content": [{"type": "text", "text": "You are a professtional HR reviewer of candidate CV."}]
+                "content": [{"type": "text", "text": "You are a professtional in document understanding"}]
             },
             {
                 "role": "user",
@@ -111,7 +111,10 @@ class UnslothExtractModel(_ExtractBase):
             top_k = 64
         )
         print('output_tokens shape: ', output_tokens.shape)
-        return self.preprocessor.batch_decode(output_tokens, skip_special_tokens = True)[0]
+        return self.preprocessor.batch_decode(
+            output_tokens[:, inputs['input_ids'].shape[-1]: ], 
+            skip_special_tokens = True
+        )[0]
 
 class JAXExtractModel(_ExtractBase):
     r"""
