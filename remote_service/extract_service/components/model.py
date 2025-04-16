@@ -105,7 +105,7 @@ class UnslothExtractModel(_ExtractBase):
         inputs = self.preprocessor(
             [Image.open(_img_path).convert("RGB") for _img_path in img_paths], 
             texts,
-            add_special_tokens = False,
+            add_special_tokens = True,
             return_tensors = "pt",
         ).to('cuda')
 
