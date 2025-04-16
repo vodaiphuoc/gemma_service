@@ -100,13 +100,15 @@ class UnslothExtractModel(_ExtractBase):
             # return_tensors = "pt"
         )
         
+        print('text after add template: ', texts)
+
         inputs = self.preprocessor(
             [Image.open(_img_path).convert("RGB") for _img_path in img_paths], 
             texts,
             add_special_tokens = False,
             return_tensors = "pt",
         ).to('cuda')
-        
+
         output_tokens =  self.model.generate(
             **inputs,
             max_new_tokens = self.max_out_length-2000,
