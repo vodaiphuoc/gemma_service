@@ -4,6 +4,9 @@ import json
 
 
 class Education(BaseModel):
+    r"""
+    Represent education information of the candidate
+    """
     university_name: str = Field(
         default="", 
         description="Name of university in which the candidate has graduated",
@@ -14,6 +17,9 @@ class Education(BaseModel):
     gpa: float = Field(default=0.0, description="Final GPA")
 
 class Experience(BaseModel):
+    r"""
+    Represent of working experience in a company or specifiec role/job title
+    """
     company_name: str = Field(description="Name of the company which the candidate has worked")
     job_position: str = Field(
         description="Position or title job or role of candidate in the company", 
@@ -21,10 +27,10 @@ class Experience(BaseModel):
     )
     from_time: str = Field(description="Start time join the company of candidate, can be year or month/year")
     to_time: str = Field(description="Left time of candidate from the company, can be year or month/year")
-    responsibilites: List[str] = Field(description="List of activities or tasks the candidate has done in the job")
+    responsibilities: List[str] = Field(description="List of activities or tasks the candidate has done in the job")
     technologies: List[str] = Field(
         description="Tech stacks that the candidate has used or learned at the time work in the company",
-        examples=["MongoDB","RabbitMQ", "RESTfullAPI"])
+        examples=["MongoDB","RabbitMQ", "RESTfullAPI","Java"])
     projects: List[str] = Field(default=[""], description="Some projects or domains or system that the candidate has joined to work on")
     awards: List[str] = Field(default=[""], description="Some awards the candidate has received from manages of company")
 
@@ -34,7 +40,7 @@ class ModelResult(BaseModel):
     """
     
     class Config:
-        title = 'Model Result Output'
+        title = 'Result Output'
 
     email: str = Field(
         description="contact email of candidate",
@@ -47,7 +53,7 @@ class ModelResult(BaseModel):
         examples=['(555) 123 4567','555-123-4567','555.123.4567']
     )
     education: Education = Field(description="Education of candidate in CV")
-    experiences: List[Experience] = Field(description="List of experience of the candidate in CV")
+    experiences: List[Experience] = Field(description="List of experiences of the candidate in CV")
     personal_projects: List[str] = Field(default=[""], description="Some personal projects like hobbies that candidate done in free time")
     total_skills: List[str] = Field(
         description="Tech stacks or programming languages or skills that the candidate in overal", 

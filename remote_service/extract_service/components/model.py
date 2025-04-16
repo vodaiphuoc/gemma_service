@@ -22,11 +22,10 @@ class _ExtractBase(ABC):
     
     _prompt = f"""
 - You are given information of the candidate in Curriculum vitae as list images above.
-- First, understanding and extract all information.
+- First, understanding and extract all information into Markdown format
 - NOTE: The information of each field (experiencs, projects, etc...) is spread across several images, so make sure
 relervant information is merged into correct field.
-- Second, with result of first step, give the final output which is formatted as a JSON instance that conforms to 
-the JSON schema below
+- Second, with Markdown results of First step, carefully pack informations into each fields of below JSON schema
 ```
 {SCHEMA_OUTPUT}
 ```
