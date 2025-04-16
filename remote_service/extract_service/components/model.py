@@ -138,5 +138,4 @@ class UnslothExtractModel(_ExtractBase):
             use_cache = True
         )
 
-        print('output_tokens type: ', type(output_tokens))
-        return output_tokens
+        return self.tokenizer.batch_decode(output_tokens)[0]
