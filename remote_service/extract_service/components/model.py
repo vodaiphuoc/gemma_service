@@ -31,12 +31,8 @@ class _ExtractBase(ABC):
         r"""
         Main forward for all sub-classes
         """
-        pad_img_tokens = '\n'.join(['<start_of_image>']*len(img_paths))
-
-        print('pad_img_tokens: ',pad_img_tokens)
-        
         _out = self._impl_forward(
-            input_prompt = self._prompt + pad_img_tokens,
+            input_prompt = self._prompt,
             img_paths = img_paths
         )
         
@@ -78,6 +74,9 @@ class JAXExtractModel(_ExtractBase):
         )
 
     def _impl_forward(self,input_prompt:str, img_paths: List[str])->str:
+        pad_img_tokens = '\n'.join(['<start_of_image>']*len(img_paths))
+        input_prompt += pad_img_tokens
+
         images_list = [np.array(Image.open(_img_path))
                   for _img_path in img_paths
                   ]
@@ -115,7 +114,7 @@ class UnslothExtractModel(_ExtractBase):
         ]
         content_parts.append({
             "type": "text",
-            "text": input_prompt
+            "text": input_prompt + '<start_of_image>'
         })
         messages = [
             {
@@ -131,16 +130,16 @@ class UnslothExtractModel(_ExtractBase):
 
         print('self.tokenizer type: ', type(self.tokenizer))
 
-        inputs = self.tokenizer.apply_chat_template(
+        texts = self.tokenizer.apply_chat_template(
             messages,
-            tokenize = True, 
+            tokenize = False, 
             add_generation_prompt = True, 
-            return_tensors = "pt"
-        ).to("cuda")
-        
-        
+            # return_tensors = "pt"
+        )
+        print('texts: ', texts)
+
         output_tokens =  self.model.generate(
-            **inputs, 
+            **self.tokenizer([texts], return_tensors = "pt").to('cuda'), 
             max_new_tokens = self.max_out_length,
             use_cache = True
         )
