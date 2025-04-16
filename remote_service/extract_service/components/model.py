@@ -128,11 +128,9 @@ class UnslothExtractModel(_ExtractBase):
             }
         ]
 
-        print('full messages: ', messages)
-
-        inputs = self.tokenizer.apply_chat_template(
-            messages, 
-            tokenize = True, 
+        inputs = self.tokenizer(
+            messages,
+            # tokenize = True, 
             add_generation_prompt = True, 
             return_tensors = "pt"
         ).to("cuda")
