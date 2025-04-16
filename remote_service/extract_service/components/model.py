@@ -130,7 +130,7 @@ class UnslothExtractModel(_ExtractBase):
 
         inputs = self.tokenizer(
             messages,
-            # tokenize = True, 
+            tokenize = True, 
             add_generation_prompt = True, 
             return_tensors = "pt"
         ).to("cuda")
@@ -138,8 +138,7 @@ class UnslothExtractModel(_ExtractBase):
         
         output_tokens =  self.model.generate(
             input_ids = inputs, 
-            max_new_tokens = 
-            self.max_out_length, 
+            max_new_tokens = self.max_out_length,
             use_cache = True
         )
 
