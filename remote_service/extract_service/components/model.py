@@ -56,7 +56,8 @@ class UnslothExtractModel(_ExtractBase):
         from unsloth.chat_templates import get_chat_template
 
         self.model, preprocessor = FastLanguageModel.from_pretrained(
-            model_name = "unsloth/gemma-3-4b-pt-unsloth-bnb-4bit",
+            # model_name = "unsloth/gemma-3-4b-pt-unsloth-bnb-4bit",
+            model_name = "unsloth/gemma-3-4b-it",
             max_seq_length = self.max_out_length,
             dtype = None,
             load_in_4bit = True,
