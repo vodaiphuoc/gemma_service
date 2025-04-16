@@ -14,7 +14,7 @@ SCHEMA_OUTPUT = get_schema_output()
 
 class _ExtractBase(ABC):
     _prompt = f"""
-- Please understanding and convert all information of the candidate in Curriculum vitae above
+- Please understanding and extract all information of the candidate in Curriculum vitae above
 - The output should be formatted as a JSON instance that conforms to the JSON schema below
 ```
 {SCHEMA_OUTPUT}
