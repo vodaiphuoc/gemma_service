@@ -14,10 +14,9 @@ SCHEMA_OUTPUT = get_schema_output()
 
 class _ExtractBase(ABC):
     _prompt = f"""
-- Please convert all information of the candidate in Curriculum vitae below
-- Your output must be structured as below format
+- Please understanding and convert all information of the candidate in Curriculum vitae above
+- Your output must be structured as JSON with below format
 {SCHEMA_OUTPUT}
-- Here is content of the CV:
 """
     def __init__(self, max_out_length:int):
         super().__init__()
@@ -91,13 +90,18 @@ class UnslothExtractModel(_ExtractBase):
             }
         ]
 
-        texts = self.tokenizer.apply_chat_template(
+        inputs = self.tokenizer.apply_chat_template(
             messages,
-            add_generation_prompt = True
-        )
-        print('texts before tokenize:', texts)
+            add_generation_prompt = True,
+            tokenize=True,
+            return_dict=True
+            return_tensors = "pt"
+        ).to('cuda')
+        
+        print('check type tokenizer: ', type(self.tokenizer))
+        
         output_tokens =  self.model.generate(
-            **self.tokenizer([texts], return_tensors = "pt").to('cuda'), 
+            **inputs,
             max_new_tokens = self.max_out_length-2000,
             use_cache = True
         )
