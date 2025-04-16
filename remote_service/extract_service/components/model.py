@@ -25,7 +25,7 @@ class _ExtractBase(ABC):
 
     @abstractmethod
     def _impl_forward(self, input_prompt:str, img_paths: List[str])->str:
-        ...
+        pass
     
     def forward(self,img_paths: List[str])->Dict[str, Union[bool, NoneType, ModelResult]]:
         r"""
@@ -134,8 +134,8 @@ class UnslothExtractModel(_ExtractBase):
 
         output_tokens =  self.model.generate(
             **self.tokenizer([texts], return_tensors = "pt").to('cuda'), 
-            max_new_tokens = self.max_out_length,
+            max_new_tokens = self.max_out_length-2000,
             use_cache = True
         )
-
-        return self.tokenizer.batch_decode(output_tokens)[0]
+        print('output_tokens shape: ', output_tokens.shape)
+        return self.tokenizer.batch_decode(output_tokens, skip_special_tokens = True)[0]
