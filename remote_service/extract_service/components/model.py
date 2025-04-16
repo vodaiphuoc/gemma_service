@@ -92,13 +92,13 @@ class UnslothExtractModel(_ExtractBase):
         from unsloth import FastLanguageModel
         from unsloth.chat_templates import get_chat_template
 
-        model, tokenizer = FastLanguageModel.from_pretrained(
+        self.model, tokenizer = FastLanguageModel.from_pretrained(
             model_name = "unsloth/gemma-3-4b-pt-unsloth-bnb-4bit",
             max_seq_length = self.max_out_length,
             dtype = None,
             load_in_4bit = True,
         )
-        self.model = FastLanguageModel.for_inference(model)
+        FastLanguageModel.for_inference(self.model)
 
         self.tokenizer = get_chat_template(
             tokenizer,
@@ -114,7 +114,7 @@ class UnslothExtractModel(_ExtractBase):
         ]
         content_parts.append({
             "type": "text",
-            "text": input_prompt + '<start_of_image>'
+            "text": input_prompt # no need to append image token here
         })
         messages = [
             {
@@ -127,16 +127,10 @@ class UnslothExtractModel(_ExtractBase):
             }
         ]
 
-
-        print('self.tokenizer type: ', type(self.tokenizer))
-
         texts = self.tokenizer.apply_chat_template(
             messages,
-            tokenize = False, 
-            add_generation_prompt = True, 
-            # return_tensors = "pt"
+            add_generation_prompt = True
         )
-        print('texts: ', texts)
 
         output_tokens =  self.model.generate(
             **self.tokenizer([texts], return_tensors = "pt").to('cuda'), 
