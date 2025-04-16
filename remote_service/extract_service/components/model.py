@@ -73,7 +73,7 @@ class UnslothExtractModel(_ExtractBase):
     def _impl_forward(self,input_prompt:str, img_paths: List[str])->str:
         content_parts = [{
                 "type": "image",
-                # "image": Image.open(_img_path).convert("RGB")
+                "image": Image.open(_img_path).convert("RGB")
             }
             for _img_path in img_paths
         ]
@@ -92,23 +92,22 @@ class UnslothExtractModel(_ExtractBase):
             }
         ]
 
-        texts = self.preprocessor.apply_chat_template(
+        inputs = self.preprocessor.apply_chat_template(
             messages,
             add_generation_prompt = True,
-            # tokenize=True,
-            # return_dict=True,
-            # return_tensors = "pt"
-        )
-        
-        print('text after add template: ', texts)
-
-        inputs = self.preprocessor(
-            [Image.open(_img_path).convert("RGB") for _img_path in img_paths], 
-            texts,
-            add_special_tokens = True,
-            return_tensors = "pt",
-            do_pan_and_scan = True
+            tokenize=True,
+            return_dict=True,
+            return_tensors = "pt"
         ).to('cuda')
+        
+        # print('text after add template: ', texts)
+
+        # inputs = self.preprocessor(
+        #     [Image.open(_img_path).convert("RGB") for _img_path in img_paths], 
+        #     texts,
+        #     add_special_tokens = True,
+        #     return_tensors = "pt"
+        # ).to('cuda')
 
         output_tokens =  self.model.generate(
             **inputs,
@@ -116,7 +115,7 @@ class UnslothExtractModel(_ExtractBase):
             use_cache = True
         )
         print('output_tokens shape: ', output_tokens.shape)
-        return self.tokenizer.batch_decode(output_tokens, skip_special_tokens = True)[0]
+        return self.preprocessor.batch_decode(output_tokens, skip_special_tokens = True)[0]
 
 class JAXExtractModel(_ExtractBase):
     r"""
