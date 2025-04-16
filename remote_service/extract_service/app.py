@@ -28,12 +28,14 @@ class ModelInference(object):
             img_paths = self.pdf2imgs(_temp_file_name, resize= False)
 
             _results = self.engine.forward(img_paths = img_paths)
+            print('_results: ', _results)
+
             if _results['status']:
                 api_response_data.append({
                     "file_name": _file_req.filename,
                     "status": _results['status'],
                     "msg": _results['msg'],
-                    "result": _results['result'].model_dump()
+                    "result": _results['result'].model_dump_json(indent = 2)
                 })
             else:
                 api_response_data.append({

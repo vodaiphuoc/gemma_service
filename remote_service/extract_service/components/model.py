@@ -35,7 +35,7 @@ class _ExtractBase(ABC):
             input_prompt = self._prompt,
             img_paths = img_paths
         )
-        
+        print('model output text: ',_out)
         try:
             return {
                 "status": True,
