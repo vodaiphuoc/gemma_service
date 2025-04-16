@@ -16,7 +16,7 @@ class _ExtractBase(ABC):
     _prompt = f"""
 - Please understanding and convert all information of the candidate in Curriculum vitae above
 - Your output must be structured as JSON with below format
-{SCHEMA_OUTPUT}
+{SCHEMA_OUTPUT}\n
 """
     def __init__(self, max_out_length:int):
         super().__init__()
@@ -107,6 +107,7 @@ class UnslothExtractModel(_ExtractBase):
             texts,
             add_special_tokens = True,
             return_tensors = "pt",
+            do_pan_and_scan = True
         ).to('cuda')
 
         output_tokens =  self.model.generate(
