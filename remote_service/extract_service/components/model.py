@@ -60,6 +60,7 @@ class UnslothExtractModel(_ExtractBase):
             max_seq_length = self.max_out_length,
             dtype = None,
             load_in_4bit = True,
+            fast_inference = True,
             use_fast=True
         )
         FastLanguageModel.for_inference(self.model)
