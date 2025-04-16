@@ -60,6 +60,7 @@ class UnslothExtractModel(_ExtractBase):
             max_seq_length = self.max_out_length,
             dtype = None,
             load_in_4bit = True,
+            use_fast=True
         )
         FastLanguageModel.for_inference(self.model)
 
@@ -67,8 +68,6 @@ class UnslothExtractModel(_ExtractBase):
             preprocessor,
             chat_template = "gemma-3"
         )
-
-        print('check type tokenizer: ', type(self.preprocessor))
 
     def _impl_forward(self,input_prompt:str, img_paths: List[str])->str:
         content_parts = [{
@@ -100,19 +99,13 @@ class UnslothExtractModel(_ExtractBase):
             return_tensors = "pt"
         ).to('cuda')
         
-        # print('text after add template: ', texts)
-
-        # inputs = self.preprocessor(
-        #     [Image.open(_img_path).convert("RGB") for _img_path in img_paths], 
-        #     texts,
-        #     add_special_tokens = True,
-        #     return_tensors = "pt"
-        # ).to('cuda')
-
         output_tokens =  self.model.generate(
             **inputs,
             max_new_tokens = self.max_out_length-2000,
-            use_cache = True
+            use_cache = True,
+            temperature = 1.0, 
+            top_p = 0.95, 
+            top_k = 64
         )
         print('output_tokens shape: ', output_tokens.shape)
         return self.preprocessor.batch_decode(output_tokens, skip_special_tokens = True)[0]
