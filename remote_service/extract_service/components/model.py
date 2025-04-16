@@ -14,7 +14,7 @@ SCHEMA_OUTPUT = get_schema_output()
 
 class _ExtractBase(ABC):
     _prompt = f"""
-- Please convert all information of the candidate in CV
+- Please convert all information of the candidate in Curriculum vitae below
 - Your output must be structured as below format
 {SCHEMA_OUTPUT}
 - Here is content of the CV:
@@ -50,42 +50,6 @@ class _ExtractBase(ABC):
                 "result": None
             }
 
-
-
-class JAXExtractModel(_ExtractBase):
-    r"""
-    Using JAX for runing gemma3-4b-it
-    NOTE:
-        currently OOM on colab
-    """
-
-    def __init__(self, max_out_length: int = 2048):
-        super().__init__(max_out_length)
-        os.environ["XLA_PYTHON_CLIENT_MEM_FRACTION"]="0.95"
-        from gemma import gm
-
-        model = gm.nn.Gemma3_4B()
-        params = gm.ckpts.load_params(gm.ckpts.CheckpointPath.GEMMA3_4B_IT)
-
-        self._sampler = gm.text.ChatSampler(
-            model = model,
-            params = params,
-            max_out_length = self.max_out_length
-        )
-
-    def _impl_forward(self,input_prompt:str, img_paths: List[str])->str:
-        pad_img_tokens = '\n'.join(['<start_of_image>']*len(img_paths))
-        input_prompt += pad_img_tokens
-
-        images_list = [np.array(Image.open(_img_path))
-                  for _img_path in img_paths
-                  ]
-        return self._sampler.chat(
-            input_prompt, 
-            images = images_list,
-        )
-
-        
 class UnslothExtractModel(_ExtractBase):
     def __init__(self, max_out_length:int = 8000):
         super().__init__(max_out_length= max_out_length)
@@ -119,7 +83,7 @@ class UnslothExtractModel(_ExtractBase):
         messages = [
             {
                 "role": "system",
-                "content": [{"type": "text", "text": "You are a professtional mathematics in document understanding."}]
+                "content": [{"type": "text", "text": "You are a professtional HR reviewer of candidate CV."}]
             },
             {
                 "role": "user",
@@ -131,7 +95,7 @@ class UnslothExtractModel(_ExtractBase):
             messages,
             add_generation_prompt = True
         )
-
+        print('texts before tokenize:', texts)
         output_tokens =  self.model.generate(
             **self.tokenizer([texts], return_tensors = "pt").to('cuda'), 
             max_new_tokens = self.max_out_length-2000,
@@ -139,3 +103,36 @@ class UnslothExtractModel(_ExtractBase):
         )
         print('output_tokens shape: ', output_tokens.shape)
         return self.tokenizer.batch_decode(output_tokens, skip_special_tokens = True)[0]
+
+class JAXExtractModel(_ExtractBase):
+    r"""
+    Using JAX for runing gemma3-4b-it
+    NOTE:
+        currently OOM on colab
+    """
+
+    def __init__(self, max_out_length: int = 2048):
+        super().__init__(max_out_length)
+        os.environ["XLA_PYTHON_CLIENT_MEM_FRACTION"]="0.95"
+        from gemma import gm
+
+        model = gm.nn.Gemma3_4B()
+        params = gm.ckpts.load_params(gm.ckpts.CheckpointPath.GEMMA3_4B_IT)
+
+        self._sampler = gm.text.ChatSampler(
+            model = model,
+            params = params,
+            max_out_length = self.max_out_length
+        )
+
+    def _impl_forward(self,input_prompt:str, img_paths: List[str])->str:
+        pad_img_tokens = '\n'.join(['<start_of_image>']*len(img_paths))
+        input_prompt += pad_img_tokens
+
+        images_list = [np.array(Image.open(_img_path))
+                  for _img_path in img_paths
+                  ]
+        return self._sampler.chat(
+            input_prompt, 
+            images = images_list,
+        )
