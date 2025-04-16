@@ -60,8 +60,7 @@ class UnslothExtractModel(_ExtractBase):
             max_seq_length = self.max_out_length,
             dtype = None,
             load_in_4bit = True,
-            fast_inference = True,
-            use_fast=True
+            fast_inference = True
         )
         FastLanguageModel.for_inference(self.model)
 
@@ -102,7 +101,7 @@ class UnslothExtractModel(_ExtractBase):
         
         output_tokens =  self.model.generate(
             **inputs,
-            max_new_tokens = self.max_out_length-2000,
+            max_new_tokens = self.max_out_length-4000,
             use_cache = True,
             temperature = 1.0, 
             top_p = 0.95, 
