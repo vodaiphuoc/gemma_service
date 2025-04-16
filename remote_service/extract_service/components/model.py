@@ -14,11 +14,10 @@ SCHEMA_OUTPUT = get_schema_output()
 
 class _ExtractBase(ABC):
     _prompt = f"""
-- Please convert these information of candidate in CV in theses images 
-into markdown text
+- Please convert all information of the candidate in CV
 - Your output must be structured as below format
 {SCHEMA_OUTPUT}
-- Here are images of the CV:
+- Here is content of the CV:
 """
     def __init__(self, max_out_length:int):
         super().__init__()
@@ -128,6 +127,8 @@ class UnslothExtractModel(_ExtractBase):
                 "content": content_parts
             }
         ]
+
+        print('full messages: ', messages)
 
         inputs = self.tokenizer.apply_chat_template(
             messages, 
