@@ -33,6 +33,8 @@ into markdown text
         Main forward for all sub-classes
         """
         pad_img_tokens = '\n'.join(['<start_of_image>']*len(img_paths))
+
+        print('pad_img_tokens: ',pad_img_tokens)
         
         _out = self._impl_forward(
             input_prompt = self._prompt + pad_img_tokens,
