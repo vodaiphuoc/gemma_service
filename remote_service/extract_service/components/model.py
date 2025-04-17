@@ -1,4 +1,4 @@
-from ._schemas import get_schema_output, ModelResult
+from ._schemas import get_schema_output, ModelResult, EXAMPLE_CONTENTS
 
 from PIL import Image
 from typing import List, Dict, Union, Any
@@ -74,7 +74,7 @@ class UnslothExtractModel(_ExtractBase):
             model_name = "google/gemma-3-4b-it",
             max_seq_length = self.max_out_length,
             dtype = None,
-            # load_in_4bit = True,
+            load_in_4bit = True,
             fast_inference = True
         )
         FastLanguageModel.for_inference(self.model)
@@ -85,6 +85,7 @@ class UnslothExtractModel(_ExtractBase):
         )
 
     def _impl_forward(self,input_prompt:str, img_paths: List[str])->str:
+        # main question
         content_parts = [{
                 "type": "image",
                 "image": Image.open(_img_path).convert("RGB")
@@ -93,20 +94,11 @@ class UnslothExtractModel(_ExtractBase):
         ]
         content_parts.append({
             "type": "text",
-            "text": input_prompt # no need to append image token here
+            "text": input_prompt
         })
 
-        content_parts.append({
-            "type": "text",
-            "text": "here is some examples"
-        })
-
-        content_parts.extend([{
-                "type": "image",
-                "image": Image.open(_img_path).convert("RGB")
-            }
-            for _img_path in img_paths
-        ])
+        # few-shot prompting
+        content_parts.extend(EXAMPLE_CONTENTS)
 
         messages = [
             {
@@ -120,19 +112,14 @@ class UnslothExtractModel(_ExtractBase):
         ]
 
 
-        text_after_apply_template = self.preprocessor.apply_chat_template(
+        inputs = self.preprocessor.apply_chat_template(
             messages,
             add_generation_prompt = True,
-        )
-
-        print(text_after_apply_template)
-
-        inputs = self.preprocessor(
-            images = [Image.open(_img_path).convert("RGB") for _img_path in img_paths],
-            text = text_after_apply_template,
-            # return_dict=True,
+            tokenize=True,
+            return_dict=True,
             return_tensors = "pt"
         ).to('cuda')
+
         
         output_tokens =  self.model.generate(
             **inputs,
