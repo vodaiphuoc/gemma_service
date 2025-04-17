@@ -22,11 +22,11 @@ class _ExtractBase(ABC):
     
     _prompt = f"""
 - You are given information of the candidate in Curriculum vitae as list images above.
-- First, understanding and extract all information into Markdown format
+- First, understanding and extract all information
 - NOTE: The information of each field (experiencs, projects, etc...) is spread across several above images, so make sure
 relervant information is merged into correct field.
-- Second, with Markdown results of First step, carefully pack informations into each fields of below JSON schema
-```
+- Second, with intermediate results of First step, carefully parse informations into each fields of below JSON schema
+```json
 {SCHEMA_OUTPUT}
 ```
 """
@@ -111,6 +111,7 @@ class UnslothExtractModel(_ExtractBase):
             }
         ]
 
+        print(messages)
 
         inputs = self.preprocessor.apply_chat_template(
             messages,

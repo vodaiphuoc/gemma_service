@@ -156,7 +156,7 @@ reliable releases, ensuring quicker updates and improved platform stability."""
 
 EXAMPLE_CONTENTS = [{
             "type": "text",
-            "text": "\n<examples>Below is example of image input and its output:\n**Example input image**:\n"
+            "text": "\n<examples>\nBelow is example of image input and its output:\n**Example input image**:\n"
 }]
 EXAMPLE_CONTENTS.extend([{
         "type": "image",
@@ -169,6 +169,6 @@ EXAMPLE_CONTENTS.extend([{
     )
 ])
 EXAMPLE_CONTENTS.append({
-            "type": "text",
-            "text": f"\n**Desire example Output**:\n{_PROMPT_EXAMPLE}"
-        })
+    "type": "text",
+    "text": f"\n**Desire example Output**:\n```json\n{_PROMPT_EXAMPLE}\n```"
+})
