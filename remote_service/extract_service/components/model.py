@@ -13,22 +13,16 @@ from pydantic import ValidationError
 SCHEMA_OUTPUT = get_schema_output()
 
 class _ExtractBase(ABC):
-#     _prompt = f"""
-# - Please understanding and extract all information of the candidate in Curriculum vitae as list images above
-# - The output should be formatted as a JSON instance that conforms to the JSON schema below
-# ```
-# {SCHEMA_OUTPUT}
-# ```"""
-    
     _prompt = f"""
 - You are given information of the candidate in Curriculum vitae as list {{num_images}} images above.
-- First, understanding and extract all information
+- First, think and extract all information, here are some hints:
+    - where the candidate graduated from? what is he/she major?
+    - what are company the candidate has worked for? for each company, what he/she did, what to archive?
 - NOTE: The information of each field (experiencs, projects, etc...) is spread across several 
 above {{num_images}} images, so make sure relervant information is merged into correct field.
-- Second, with intermediate results of First step, carefully parse informations into each fields of below JSON schema
+- Second, with intermediate results of First step, carefully parse the results into each fields of below JSON schema
 for final output, dont show any else explainations.
 """
-
     def __init__(self, max_out_length:int):
         super().__init__()
         self.max_out_length = max_out_length
@@ -68,7 +62,6 @@ class UnslothExtractModel(_ExtractBase):
 
         self.model, preprocessor = FastLanguageModel.from_pretrained(
             # model_name = "unsloth/gemma-3-4b-pt-unsloth-bnb-4bit",
-            # model_name = "unsloth/gemma-3-4b-it",
             model_name = "google/gemma-3-4b-it",
             max_seq_length = self.max_out_length,
             dtype = None,
@@ -86,7 +79,7 @@ class UnslothExtractModel(_ExtractBase):
         # main question
         content_parts = [{
             "type": "text",
-            "text": "--- MAIN INPUT BEGINS ---"
+            "text": "--- **MAIN INPUT BEGINS** ---"
         }]
 
         content_parts.extend([{
@@ -100,7 +93,7 @@ class UnslothExtractModel(_ExtractBase):
             "type": "text",
             "text": input_prompt.format(num_images = len(img_paths)) + \
                     f"\nJSON schema:\n```json\n{SCHEMA_OUTPUT}```\n" + \
-                    "--- MAIN INPUT ENDS ---"
+                    "--- **MAIN INPUT ENDS** ---"
         })
 
         # few-shot prompting
@@ -132,7 +125,7 @@ class UnslothExtractModel(_ExtractBase):
             **inputs,
             max_new_tokens = self.max_out_length-1000,
             use_cache = True,
-            temperature = 0.1
+            temperature = 0.2
         )
         print('output_tokens shape: ', output_tokens.shape)
         return self.preprocessor.batch_decode(

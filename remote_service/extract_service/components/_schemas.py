@@ -57,7 +57,7 @@ class ModelResult(BaseModel):
         pattern=r"^\+?\(?\d{2,4}\)?[\s.-]?\d{2,4}[\s.-]?\d{2,4}$",
         examples=['(555) 123 4567','555-123-4567','555.123.4567']
     )
-    education: List[Education] = Field(description="Education of candidate in CV")
+    education: List[Education] = Field(description="List of education information of candidate in CV")
     experiences: List[Experience] = Field(description="List of experiences of the candidate in CV")
     personal_projects: List[str] = Field(default=[""], description="Some personal projects like hobbies that candidate done in free time")
     tech_stacks: List[str] = Field(
@@ -155,7 +155,7 @@ reliable releases, ensuring quicker updates and improved platform stability."""
 
 EXAMPLE_CONTENTS = [{
             "type": "text",
-            "text": "\n<examples>\nBelow is example of image input and its output:\n--- EXAMPLE BEGINS ---\n**Example input image**:\n"
+            "text": "\n<examples>\nBelow is an example of image inputs and its output:\n--- **EXAMPLE BEGINS** ---\nExample input images:\n"
 }]
 EXAMPLE_CONTENTS.extend([{
         "type": "image",
@@ -169,5 +169,5 @@ EXAMPLE_CONTENTS.extend([{
 ])
 EXAMPLE_CONTENTS.append({
     "type": "text",
-    "text": f"\n**Desire example Output**:\n```json\n{_PROMPT_EXAMPLE}\n```\n--- EXAMPLE ENDS ---\n"
+    "text": f"\nDesire example Output:\n```json\n{_PROMPT_EXAMPLE}\n```\n--- **EXAMPLE ENDS** ---\n"
 })
