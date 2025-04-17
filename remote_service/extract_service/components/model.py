@@ -21,14 +21,11 @@ class _ExtractBase(ABC):
 # ```"""
     
     _prompt = f"""
-- You are given information of the candidate in Curriculum vitae as list images above.
+- You are given information of the candidate in Curriculum vitae as list {{num_images}} images above.
 - First, understanding and extract all information
 - NOTE: The information of each field (experiencs, projects, etc...) is spread across several above images, so make sure
 relervant information is merged into correct field.
 - Second, with intermediate results of First step, carefully parse informations into each fields of below JSON schema
-```json
-{SCHEMA_OUTPUT}
-```
 """
 
     def __init__(self, max_out_length:int):
@@ -94,7 +91,7 @@ class UnslothExtractModel(_ExtractBase):
         ]
         content_parts.append({
             "type": "text",
-            "text": input_prompt
+            "text": input_prompt.format(num_images = len(img_paths)) + "```json\n{SCHEMA_OUTPUT}```"
         })
 
         # few-shot prompting
