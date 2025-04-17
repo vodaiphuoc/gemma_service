@@ -106,10 +106,15 @@ class UnslothExtractModel(_ExtractBase):
             }
         ]
 
-        inputs = self.preprocessor.apply_chat_template(
+
+        text_after_apply_template = self.preprocessor.apply_chat_template(
             messages,
             add_generation_prompt = True,
-            tokenize=True,
+        )
+
+        inputs = self.preprocessor(
+            images = [Image.open(_img_path).convert("RGB") for _img_path in img_paths],
+            text = text_after_apply_template,
             return_dict=True,
             return_tensors = "pt"
         ).to('cuda')
