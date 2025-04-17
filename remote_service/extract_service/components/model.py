@@ -85,14 +85,22 @@ class UnslothExtractModel(_ExtractBase):
     def _impl_forward(self,input_prompt:str, img_paths: List[str])->str:
         # main question
         content_parts = [{
+            "type": "text",
+            "text": "--- MAIN INPUT BEGINS ---"
+        }]
+
+        content_parts.extend([{
                 "type": "image",
                 "image": Image.open(_img_path).convert("RGB")
             }
             for _img_path in img_paths
-        ]
+        ])
+
         content_parts.append({
             "type": "text",
-            "text": input_prompt.format(num_images = len(img_paths)) + f"```json\n{SCHEMA_OUTPUT}```"
+            "text": input_prompt.format(num_images = len(img_paths)) + \
+                    f"\nJSON schema:\n```json\n{SCHEMA_OUTPUT}```\n" + \
+                    "--- MAIN INPUT ENDS ---"
         })
 
         # few-shot prompting
@@ -124,7 +132,7 @@ class UnslothExtractModel(_ExtractBase):
             **inputs,
             max_new_tokens = self.max_out_length-1000,
             use_cache = True,
-            temperature = 0.4
+            temperature = 0.1
         )
         print('output_tokens shape: ', output_tokens.shape)
         return self.preprocessor.batch_decode(

@@ -102,13 +102,13 @@ _PROMPT_EXAMPLE = ModelResult(
             from_time="2020",
             to_time="present",
             responsibilities=[
-                """Lead a development team using React and Python. Participate in Agile methods, contributing to
-sprint planning, backlog grooming, and sprint retrospectives. Collaborate with cross-functional
-teams to design and implement scalable microservices architecture. Conduct code reviews and
-mentor junior developers, fostering continuous learning and code quality improvement""",
-                """Successfully led a cutting-edge web application, revamping user interface, resulting in a
-remarkable 65% increase in user engagement and a boost in customer satisfaction""",
-                """Led team to design and implement a scalable microservices architecture, seamlessly
+"""Lead a development team using React and Python. Participate in Agile methods, contributing to sprint planning, 
+backlog grooming, and sprint retrospectives. Collaborate with cross-functional teams to design and implement 
+scalable microservices architecture. Conduct code reviews and mentor junior developers, fostering continuous 
+learning and code quality improvement""",
+"""Successfully led a cutting-edge web application, revamping user interface, resulting in a remarkable 65% increase 
+in user engagement and a boost in customer satisfaction""",
+"""Led team to design and implement a scalable microservices architecture, seamlessly
 integrating cross-functional teams and achieving an impressive 30% reduction in system
 downtime."""
             ],
@@ -122,15 +122,14 @@ downtime."""
             from_time="2018",
             to_time="2020",
             responsibilities=[
-                """Developed and maintained backend systems for a cloud-based SaaS platform, prioritising system
-stability and efficiency to deliver a high-performance user experience. Collaborated closely with
-UI/UX designers to build responsive web applications, ensuring seamless user experiences across
-various devices and screen sizes""",
-                """Improved system performance by optimising backend systems, achieving 15% reduction in
+"""Developed and maintained backend systems for a cloud-based SaaS platform, prioritising system stability 
+and efficiency to deliver a high-performance user experience. Collaborated closely with UI/UX designers to build responsive 
+web applications, ensuring seamless user experiences across various devices and screen sizes""",
+"""Improved system performance by optimising backend systems, achieving 15% reduction in
 response time, leading to a more responsive and satisfying user experience.""",
-                """Successfully implemented unit tests and automated integration tests, resulting in 20% increase
+"""Successfully implemented unit tests and automated integration tests, resulting in 20% increase
 in code coverage and a significant reduction in production defects.""",
-                """Enhanced the continuous integration and deployment pipeline, enabling faster and more
+"""Enhanced the continuous integration and deployment pipeline, enabling faster and more
 reliable releases, ensuring quicker updates and improved platform stability."""
             ],
             technologies=[""],
@@ -156,7 +155,7 @@ reliable releases, ensuring quicker updates and improved platform stability."""
 
 EXAMPLE_CONTENTS = [{
             "type": "text",
-            "text": "\n<examples>\nBelow is example of image input and its output:\n**Example input image**:\n"
+            "text": "\n<examples>\nBelow is example of image input and its output:\n--- EXAMPLE BEGINS ---\n**Example input image**:\n"
 }]
 EXAMPLE_CONTENTS.extend([{
         "type": "image",
@@ -170,5 +169,5 @@ EXAMPLE_CONTENTS.extend([{
 ])
 EXAMPLE_CONTENTS.append({
     "type": "text",
-    "text": f"\n**Desire example Output**:\n```json\n{_PROMPT_EXAMPLE}\n```"
+    "text": f"\n**Desire example Output**:\n```json\n{_PROMPT_EXAMPLE}\n```\n--- EXAMPLE ENDS ---\n"
 })
