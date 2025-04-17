@@ -99,11 +99,6 @@ class UnslothExtractModel(_ExtractBase):
         # few-shot prompting
         content_parts.extend(EXAMPLE_CONTENTS)
 
-        content_parts.append({
-            "type": "text",
-            "text": "Your main outputs from MAIN INPUT:"
-        })
-
         messages = [
             {
                 "role": "system",
