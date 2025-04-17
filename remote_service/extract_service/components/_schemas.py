@@ -2,7 +2,7 @@ from pydantic import BaseModel, Field
 from typing import List
 import json
 
-from .extract import pdf2imgs
+from .extract import pdf2imgs, read_image
 from PIL import Image
 import os
 
@@ -159,7 +159,7 @@ EXAMPLE_CONTENTS = [{
 }]
 EXAMPLE_CONTENTS.extend([{
         "type": "image",
-        "image": Image.open(_img_path).convert("RGB")
+        "image": read_image(_img_path)
     }
     for _img_path in pdf2imgs(pdf_path=os.path.join(
         os.path.dirname(__file__).replace("components","examples"), 

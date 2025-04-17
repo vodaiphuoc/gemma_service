@@ -1,4 +1,6 @@
 from ._schemas import get_schema_output, ModelResult, EXAMPLE_CONTENTS
+from .extract import read_image
+
 
 from PIL import Image
 from typing import List, Dict, Union, Any
@@ -39,7 +41,6 @@ for final output, dont show any else explainations.
             input_prompt = self._prompt,
             img_paths = img_paths
         )
-        print('model output text: ',_out)
 
         _out = _out.replace('```json','').replace('```','')
 
@@ -87,7 +88,7 @@ class UnslothExtractModel(_ExtractBase):
 
         content_parts.extend([{
                 "type": "image",
-                "image": Image.open(_img_path).convert("RGB")
+                "image": read_image(_img_path)
             }
             for _img_path in img_paths
         ])

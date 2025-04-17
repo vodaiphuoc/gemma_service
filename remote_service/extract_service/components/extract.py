@@ -24,3 +24,9 @@ def pdf2imgs(
         img_out_paths.append(curr_img_path)
         
     return img_out_paths
+
+
+def read_image(img_path:str):
+    with open(img_path, 'rb') as image_file:
+        encoded_string = base64.b64encode(image_file.read()).decode('utf-8')
+        return "data:image/jpeg:base64,"+encoded_string
