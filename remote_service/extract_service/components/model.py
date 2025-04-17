@@ -40,6 +40,9 @@ for final output, dont show any else explainations.
             img_paths = img_paths
         )
         print('model output text: ',_out)
+
+        _out = _out.replace('```json','').replace('```','')
+
         try:
             return {
                 "status": True,
@@ -93,11 +96,22 @@ class UnslothExtractModel(_ExtractBase):
             "type": "text",
             "text": input_prompt.format(num_images = len(img_paths)) + \
                     f"\nJSON schema:\n```json\n{SCHEMA_OUTPUT}```\n" + \
-                    "--- **MAIN INPUT ENDS** ---"
+                    """--- **MAIN INPUT ENDS** ---\n
+**Important:** The following example is for demonstrating the desired output format only. You MUST extract 
+the information from the images provided within the "MAIN INPUT BEGINS" and "MAIN INPUT ENDS" boundaries. Do not 
+use any information from the example CV for the final output.
+"""
         })
 
         # few-shot prompting
         content_parts.extend(EXAMPLE_CONTENTS)
+
+
+        content_parts.append({
+                'type': 'text', 
+                'text': """**Now, process the CV information from the images provided at the beginning (between "MAIN INPUT BEGINS" and 
+"MAIN INPUT ENDS") and output the JSON.**"""
+        })
 
         messages = [
             {
@@ -125,7 +139,7 @@ class UnslothExtractModel(_ExtractBase):
             **inputs,
             max_new_tokens = self.max_out_length-1000,
             use_cache = True,
-            temperature = 0.15
+            temperature = 0.1
         )
         print('output_tokens shape: ', output_tokens.shape)
         return self.preprocessor.batch_decode(
