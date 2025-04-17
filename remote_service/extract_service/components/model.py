@@ -130,13 +130,13 @@ class UnslothExtractModel(_ExtractBase):
             **inputs,
             max_new_tokens = self.max_out_length-1000,
             use_cache = True,
-            temperature = 0.1
+            temperature = 0.15
         )
         print('output_tokens shape: ', output_tokens.shape)
         return self.preprocessor.batch_decode(
             output_tokens[:, inputs['input_ids'].shape[-1]: ],
             skip_special_tokens = True
-        )[0].replace("```json","").replace("```","")
+        )[0]
 
 class JAXExtractModel(_ExtractBase):
     r"""
