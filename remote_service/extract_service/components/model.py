@@ -91,7 +91,7 @@ class UnslothExtractModel(_ExtractBase):
         ]
         content_parts.append({
             "type": "text",
-            "text": input_prompt.format(num_images = len(img_paths)) + "```json\n{SCHEMA_OUTPUT}```"
+            "text": input_prompt.format(num_images = len(img_paths)) + f"```json\n{SCHEMA_OUTPUT}```"
         })
 
         # few-shot prompting
