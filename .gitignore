@@ -3,5 +3,6 @@ myenv/
 checkpoints/.cache/
 *.gguf
 *.pdf
+!example.pdf
 *test*.py
 __pycache__/
