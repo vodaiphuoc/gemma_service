@@ -23,9 +23,10 @@ class _ExtractBase(ABC):
     _prompt = f"""
 - You are given information of the candidate in Curriculum vitae as list {{num_images}} images above.
 - First, understanding and extract all information
-- NOTE: The information of each field (experiencs, projects, etc...) is spread across several above images, so make sure
-relervant information is merged into correct field.
+- NOTE: The information of each field (experiencs, projects, etc...) is spread across several 
+above {{num_images}} images, so make sure relervant information is merged into correct field.
 - Second, with intermediate results of First step, carefully parse informations into each fields of below JSON schema
+for final output, dont show any else explainations.
 """
 
     def __init__(self, max_out_length:int):
@@ -68,7 +69,7 @@ class UnslothExtractModel(_ExtractBase):
         self.model, preprocessor = FastLanguageModel.from_pretrained(
             # model_name = "unsloth/gemma-3-4b-pt-unsloth-bnb-4bit",
             # model_name = "unsloth/gemma-3-4b-it",
-            model_name = "google/gemma-3-4b-it",
+            model_name = "google/gemma-3-12b-it",
             max_seq_length = self.max_out_length,
             dtype = None,
             load_in_4bit = True,
@@ -121,11 +122,9 @@ class UnslothExtractModel(_ExtractBase):
         
         output_tokens =  self.model.generate(
             **inputs,
-            max_new_tokens = self.max_out_length-4000,
+            max_new_tokens = self.max_out_length-2000,
             use_cache = True,
-            temperature = 1.0, 
-            top_p = 0.95, 
-            top_k = 64
+            temperature = 0.4
         )
         print('output_tokens shape: ', output_tokens.shape)
         return self.preprocessor.batch_decode(
