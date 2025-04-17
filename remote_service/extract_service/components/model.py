@@ -112,6 +112,8 @@ class UnslothExtractModel(_ExtractBase):
             add_generation_prompt = True,
         )
 
+        print(text_after_apply_template)
+
         inputs = self.preprocessor(
             images = [Image.open(_img_path).convert("RGB") for _img_path in img_paths],
             text = text_after_apply_template,
