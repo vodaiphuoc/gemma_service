@@ -60,7 +60,7 @@ class ModelResult(BaseModel):
     education: List[Education] = Field(description="Education of candidate in CV")
     experiences: List[Experience] = Field(description="List of experiences of the candidate in CV")
     personal_projects: List[str] = Field(default=[""], description="Some personal projects like hobbies that candidate done in free time")
-    total_skills: List[str] = Field(
+    tech_stacks: List[str] = Field(
         description="Tech stacks or programming languages or skills that the candidate in overal", 
         examples=["Python, JavaScripts, Bootsrap","PostgresSQL"]
     )
@@ -138,7 +138,7 @@ reliable releases, ensuring quicker updates and improved platform stability."""
             awards=[""]
         )
     ],
-    total_skills=[
+    tech_stacks=[
         "Web Technologies: HTML, CSS, JavaScript, React", 
         "Database: MySQL, MongoDB",
         "Version Control: Git",
@@ -156,7 +156,7 @@ reliable releases, ensuring quicker updates and improved platform stability."""
 
 EXAMPLE_CONTENTS = [{
             "type": "text",
-            "text": "\nHere is example of image input and output:\n Input image:"
+            "text": "\n<examples>Below is example of image input and its output:\n**Example input image**:\n"
 }]
 EXAMPLE_CONTENTS.extend([{
         "type": "image",
@@ -170,5 +170,5 @@ EXAMPLE_CONTENTS.extend([{
 ])
 EXAMPLE_CONTENTS.append({
             "type": "text",
-            "text": f"\nDesire Output: {_PROMPT_EXAMPLE}"
+            "text": f"\n**Desire example Output**:\n{_PROMPT_EXAMPLE}"
         })
