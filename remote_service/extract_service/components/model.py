@@ -95,6 +95,19 @@ class UnslothExtractModel(_ExtractBase):
             "type": "text",
             "text": input_prompt # no need to append image token here
         })
+
+        content_parts.append({
+            "type": "text",
+            "text": "here is some examples"
+        })
+
+        content_parts.extend([{
+                "type": "image",
+                "image": Image.open(_img_path).convert("RGB")
+            }
+            for _img_path in img_paths
+        ])
+
         messages = [
             {
                 "role": "system",
@@ -117,7 +130,7 @@ class UnslothExtractModel(_ExtractBase):
         inputs = self.preprocessor(
             images = [Image.open(_img_path).convert("RGB") for _img_path in img_paths],
             text = text_after_apply_template,
-            return_dict=True,
+            # return_dict=True,
             return_tensors = "pt"
         ).to('cuda')
         
