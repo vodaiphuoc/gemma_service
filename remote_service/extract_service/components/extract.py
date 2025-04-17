@@ -2,6 +2,7 @@ import os, pymupdf  # import the bindings
 from PIL import Image
 from PIL import ImageOps
 from typing import List
+import base64
 
 TEMP_DATA_PATH = os.path.dirname(__file__).replace("components",".temp_data")
 
