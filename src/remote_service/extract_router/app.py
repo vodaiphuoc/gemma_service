@@ -3,6 +3,7 @@ from uuid import uuid4
 from fastapi import UploadFile, Request, FastAPI, APIRouter
 from fastapi.responses import JSONResponse
 
+import os
 from typing import List, Dict, Union, Any
 from types import NoneType
 from loguru import logger
@@ -44,6 +45,11 @@ class ModelInference(object):
                     "msg": _results['msg'],
                     "result": None
                 })
+
+            # empty temporary data
+            os.remove(_temp_file_name)
+            for _img_path in img_paths:
+                os.remove(_img_path)
         
         return api_response_data
     

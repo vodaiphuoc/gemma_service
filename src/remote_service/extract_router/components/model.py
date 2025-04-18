@@ -1,4 +1,5 @@
-from ._schemas import get_schema_output, ModelResult, EXAMPLE_CONTENTS
+from common.schemas import get_schema_output, ExtractModelResult
+from ._few_shot import EXAMPLE_CONTENTS
 from .extract import read_image
 
 
@@ -33,7 +34,7 @@ for final output, dont show any else explainations.
     def _impl_forward(self, input_prompt:str, img_paths: List[str])->str:
         pass
     
-    def forward(self,img_paths: List[str])->Dict[str, Union[bool, NoneType, ModelResult]]:
+    def forward(self,img_paths: List[str])->Dict[str, Union[bool, NoneType, ExtractModelResult]]:
         r"""
         Main forward for all sub-classes
         """
@@ -48,7 +49,7 @@ for final output, dont show any else explainations.
             return {
                 "status": True,
                 "msg": "",
-                "result": ModelResult.model_validate_json(_out)
+                "result": ExtractModelResult.model_validate_json(_out)
             }
         
         except ValidationError as e:

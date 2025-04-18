@@ -2,7 +2,8 @@
 # with public domain from ngrok
 
 import os
-from extract_service import EXTRACT_ROUTER
+from extract_router import EXTRACT_ROUTER
+from ranking_router import RANKING_ROUTER
 
 from loguru import logger
 import ngrok
@@ -52,7 +53,7 @@ app.add_middleware(CORSMiddleware,
                    )
 
 app.include_router(EXTRACT_ROUTER)
-
+app.include_router(RANKING_ROUTER)
 
 async def main():
     config = uvicorn.Config("app:app",
