@@ -1,6 +1,6 @@
 from google import genai
 from google.genai import types
-
+from pydantic import ValidationError
 from common.schemas import ExtractModelResult, JobDescriptions, JobDescriptionsScoreOutput
 
 
@@ -67,5 +67,18 @@ class RankingModel(object):
                 ]
             ),
         )
+        # post processing
+        response_text = response.text.replace("```.json", "").replace("```","")
+        try:
+            return {
+                "status": True,
+                "msg": "",
+                "result": JobDescriptionsScoreOutput.model_validate_json(response_text)
+            }
         
-        return response.text
+        except ValidationError as e:
+            return {
+                "status": False,
+                "msg": e,
+                "result": None
+            }

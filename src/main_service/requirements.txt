@@ -1,0 +1,8 @@
+fastapi
+pillow
+pymupdf==1.25.5
+loguru
+uvicorn
+python-dotenv
+python-multipart
+aio-pika==9.0.5
