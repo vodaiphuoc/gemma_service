@@ -2,8 +2,8 @@
 # with public domain from ngrok
 
 import os
-from extract_router import EXTRACT_ROUTER
-from ranking_router import RANKING_ROUTER
+from extract_service import EXTRACT_ROUTER
+from ranking_service import RANKING_ROUTER
 
 from loguru import logger
 import ngrok
