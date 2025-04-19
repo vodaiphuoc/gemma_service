@@ -9,3 +9,4 @@ python-multipart
 unsloth
 vllm
 google-genai
+firebase-admin
