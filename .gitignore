@@ -1,5 +1,12 @@
 myenv/
+
 .env
+config.env
+
+total_envs/prod/obj_storage/*
+!total_envs/prod/obj_storage/.gitkeep
+total_envs/prod/*env
+
 checkpoints/.cache/
 *.gguf
 *.pdf

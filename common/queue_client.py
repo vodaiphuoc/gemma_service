@@ -2,22 +2,124 @@ import aio_pika
 from typing import Callable, Coroutine, Any
 import asyncio
 import loguru
+import json
 
-class QueueClient(object):
+from aio_pika.abc import (
+    AbstractRobustConnection, 
+    AbstractRobustChannel, 
+    AbstractIncomingMessage
+)
+
+from .components_settings import MQ_SETTINGS
+
+class _QueueBase(object):
     def __init__(
-            self,
+            self, 
             user:str,
             pwd: str,
             host_name:str, 
-            port: str,
-            queue_name:str,
-            call_back: Callable[[aio_pika.abc.AbstractIncomingMessage], Coroutine[None, None, None]],
+            port: int
+        ):
+        self._url = f"amqp://{user}:{pwd}@{host_name}:{port}"
+
+class QueueProducer(_QueueBase):
+    connection: AbstractRobustConnection | None = None
+    channel: AbstractRobustChannel | None = None
+
+    def __init__(
+            self, 
+            user: str, 
+            pwd: str, 
+            host_name:str, 
+            port: int, 
             service_logger: loguru._logger.Logger
         )->None:
-        self._url = f"amqp://{user}:{pwd}@{host_name}:{port}"
+        super().__init__(user = user, pwd=pwd, host_name= host_name, port= port)
+        self._logger = service_logger
+
+    def status(self) -> bool:
+        if self.connection.is_closed or self.channel.is_closed:
+            return False
+        return True
+
+    async def _clear(self) -> None:
+        if not self.channel.is_closed:
+            await self.channel.close()
+        if not self.connection.is_closed:
+            await self.connection.close()
+
+        self.connection = None
+        self.channel = None
+
+    async def connect(self) -> None:
+        """
+        Establish connection with the RabbitMQ
+
+        :return: None
+        """
+        self._logger.info("connect to rabbitmq...")
+        try:
+            self.connection = await aio_pika.connect_robust(self._url)
+            self.channel = await self.connection.channel(publisher_confirms=False)
+            self._logger.info("rabbitmq is connected")
+        
+        except Exception as e:
+            await self._clear()
+            self._logger.error(e.__dict__)
+
+    async def disconnect(self) -> None:
+        """
+        Disconnect and clear connections from RabbitMQ
+
+        :return: None
+        """
+        await self._clear()
+
+    async def send_messages(
+            self,
+            messages: list | dict,
+            routing_key: str
+    ) -> None:
+        if routing_key not in [MQ_SETTINGS.EXTRACT_SERVICE_QUEUE_NAME, MQ_SETTINGS.RANKING_SERVICE_QUEUE_NAME]:
+            raise ValueError("`routing key` must be one of \
+                `MQ_SETTINGS.EXTRACT_SERVICE_QUEUE_NAME` or `MQ_SETTINGS.RANKING_SERVICE_QUEUE_NAME`")
+        
+        if not self.channel:
+            raise RuntimeError("Cannot connect to rabbitmq")
+
+        if isinstance(messages, dict):
+            messages = [messages]
+
+        async with self.channel.transaction():
+            for message in messages:
+                message = aio_pika.Message(
+                    body=json.dumps(message).encode()
+                )
+
+                await self.channel.default_exchange.publish(
+                    message, routing_key=routing_key,
+                )
+
+
+class QueueConsumer(_QueueBase):
+    def __init__(
+            self,
+            queue_name:str,
+            call_back: Callable[[AbstractIncomingMessage, Any], Coroutine[None, None, None]],
+            service_logger: loguru._logger.Logger,
+            user:str,
+            pwd: str,
+            host_name:str, 
+            port: int,
+            *args,
+            **kwargs
+        )->None:
+        super().__init__(user = user, pwd=pwd, host_name= host_name, port= port)
         self._queue_name = queue_name
         self._call_back = call_back
         self._logger = service_logger
+        self._args = args
+        self._kwargs = kwargs
 
     async def _run_queue(self) -> None:
         connection = await aio_pika.connect_robust(self._url)
@@ -29,7 +131,7 @@ class QueueClient(object):
 
                 self._logger.info("start")
                 
-                await queue.consume(self._call_back)
+                await queue.consume(self._call_back, *self._args, **self._kwargs)
 
                 await asyncio.Future()
 

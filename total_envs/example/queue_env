@@ -1,0 +1,6 @@
+USER = some_user_name
+PWD = some_password
+HOSTNAME = some_hostname
+PORT = some_port
+EXTRACT_SERVICE_QUEUE_NAME = some_string
+RANKING_SERVICE_QUEUE_NAME = some_string

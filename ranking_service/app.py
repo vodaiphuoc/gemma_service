@@ -12,15 +12,18 @@ from common import (
     QueueClient, 
     make_logger,
     ExtractModelResult,
-    JobDescriptions
+    JobDescriptions,
+    MQ_SETTINGS,
+    GENERAL_SETTINGS
 )
 
 ServiceLogger = make_logger("Ranking service")
 
 from aio_pika.abc import AbstractIncomingMessage
 
-async def message_router(
+async def message_handler(
         message: AbstractIncomingMessage,
+        model: RankingModel
     ) -> None:
     async with message.process():
         print('message body: ', message.body)
@@ -28,6 +31,8 @@ async def message_router(
         
         msg = body['data']
         ServiceLogger.info('app1 receive data: {msg}'.format(msg = msg))
+
+        
 
 
 @asynccontextmanager
@@ -37,13 +42,14 @@ async def lifespan(app: FastAPI):
     model = RankingModel(api_key= os.environ['G_API_KEY'])
 
     queue_client = QueueClient(
-        user= os.environ['user'],
-        pwd= os.environ['pwd'], 
-        host_name=os.environ['hostname'], 
-        port = os.environ['port'],
-        queue_name = "app1",
-        call_back = model_engine.run,
-        service_logger="Extract service"
+        user = MQ_SETTINGS.USER, 
+        pwd = MQ_SETTINGS.PWD, 
+        host_name = MQ_SETTINGS.HOSTNAME, 
+        port = MQ_SETTINGS.PORT,
+        queue_name = MQ_SETTINGS.RANKING_SERVICE_QUEUE_NAME,
+        call_back = message_handler,
+        service_logger = ServiceLogger,
+        model = model
     )
     queue_client.start_background_task(loop)
 
@@ -62,8 +68,8 @@ async def index():
 
 async def main():
     config = uvicorn.Config("app:app",
-                            host="0.0.0.0",
-                            port=8082,
+                            host = GENERAL_SETTINGS.APPLICATION_HOST,
+                            port = GENERAL_SETTINGS.RANKING_SERVICE_PORT,
                             reload=True,
                             log_level="info"
                             )

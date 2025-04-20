@@ -7,6 +7,7 @@ uvicorn
 python-dotenv
 python-multipart
 unsloth
-vllm
 google-genai
 firebase-admin
+python-dotenv
+aio-pika

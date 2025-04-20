@@ -1,0 +1,3 @@
+G_API_KEY  = key_for_agent
+APPLICATION_PORT = what_port_to_choose
+APPLICATION_HOST= what_is_host_value

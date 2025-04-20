@@ -1,0 +1,4 @@
+DB_URL = url_of_db
+StorageBucketURL = url_of_sotorage
+ACCOUNT_KEY_FILE = account_file
+PROJECT_ID = what_id_of_project
