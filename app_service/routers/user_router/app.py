@@ -23,7 +23,7 @@ from common import (
     MQ_SETTINGS
 )
 
-ServiceLogger = make_logger("APP service")
+ServiceLogger = make_logger("APP service | User router")
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):

@@ -1,59 +1,82 @@
 services:
-    extract_service:
-        image: test_microservices/extract_service:${TAG}
-        build:
-            context: .
-            dockerfile: ./extract_service/Dockerfile
-        restart: always
-        env_file:
-            - config.env
-        ports:
-            - "8081:8081"
-        depends_on:
-            rabbit:
-                condition: service_healthy
-        secrets:
-            - PATH1
-            - PATH2
-            - PATH3
-    
-    queue_service:
+    app_service:
+        container_name: app_service_${PROJECT_NAME}
         image: test_microservices/queue_service:${TAG}
         build:
             context: .
             dockerfile: ./queue_service/Dockerfile
         restart: always
         env_file:
-            - config.env
+            - .env
         ports:
             - "8080:8080"
         depends_on:
             rabbit:
                 condition: service_healthy
+        networks:
+            - app_network
+        secrets:
+            - PATH1
+            - PATH2
+            - PATH3
+    
+    frontend:
+        container_name: frontend_${PROJECT_NAME}
+        build:
+            context: .
+            dockerfile: ./frontend/Dockerfile
+        restart: always
+        ports:
+            - "80:80"
+        networks:
+            - app_network
+        depends_on:
+            - app_service
+
+    extract_service:
+        container_name: extract_service_docker
+        image: test_microservices/extract_service:${TAG}
+        build:
+            context: .
+            dockerfile: ./extract_service/Dockerfile
+        restart: always
+        env_file:
+            - .env
+        ports:
+            - "8081:8081"
+        depends_on:
+            rabbit:
+                condition: service_healthy
+        networks:
+            - app_network  
         secrets:
             - PATH1
             - PATH2
             - PATH3
 
     ranking_service:
+        container_name: ranking_service_docker
         image: test_microservices/ranking_service:${TAG}
         build:
             context: .
             dockerfile: ./ranking_service/Dockerfile
         restart: always
         env_file:
-            - config.env
+            - .env
         ports:
             - "8082:8082"
         depends_on:
             rabbit:
                 condition: service_healthy
+        networks:
+            - app_network
         secrets:
             - PATH1
             - PATH2
             - PATH3
 
     rabbit:
+        container_name: rabbit-docker
         image: rabbitmq:3.11.11-management
         restart: always
         ports:
@@ -63,7 +86,36 @@ services:
             interval: 10s
             timeout: 10s
             retries: 3
+        networks:
+            - app_network
         stop_signal: SIGTERM
+
+    postgres_service:
+        hostname: ${PG_HOST}
+        container_name: postgres_service_${PROJECT_NAME}
+        image: postgres:15
+        restart: always
+        environment:
+            POSTGRES_USER_FILE: /run/secrets/init_db1
+            POSTGRES_PASSWORD_FILE: /run/secrets/init_db2
+        volumes:
+            - pgdata:/var/lib/postgresql/data
+        secrets:
+            - init_db1
+            - init_db2
+        ports:
+            - "5432:5432"
+        healthcheck:
+            test: [ "CMD-SHELL", "pg_isready -U postgres -d postgres"]
+            interval: 5s
+            timeout: 5s
+            retries: 5
+        networks:
+            - app_network
+
+volumes:
+    pgdata:
+        name: pgdata_${PROJECT_NAME}
 
 secrets:
     PATH1:
@@ -72,3 +124,7 @@ secrets:
         file: ${MQS}
     PATH3:
         file: ${GENERALS}
+
+networks:
+    app_network:
+        driver: bridge

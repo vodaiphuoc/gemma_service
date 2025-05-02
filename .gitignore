@@ -3,6 +3,8 @@ myenv/
 .env
 config.env
 
+total_envs/prod/db/*
+!total_envs/prod/db/.gitkeep
 total_envs/prod/obj_storage/*
 !total_envs/prod/obj_storage/.gitkeep
 total_envs/prod/*env

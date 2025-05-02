@@ -53,11 +53,11 @@ async def lifespan(app: FastAPI):
     )
     queue_client.start_background_task(loop)
 
-    ServiceLogger.info('Done init')
+    ServiceLogger.info('app done init')
     yield
     ServiceLogger.info('app shutting down. Cancelling background task...')
     await queue_client.stop_background_task()
-    ServiceLogger.info('FastAPI app shutdown complete.')
+    ServiceLogger.info('app shutdown complete.')
 
 
 main_app = FastAPI(lifespan= lifespan, root_path="ranking_service")
